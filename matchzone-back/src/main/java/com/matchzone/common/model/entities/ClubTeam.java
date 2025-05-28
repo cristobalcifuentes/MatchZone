@@ -2,9 +2,12 @@ package com.matchzone.common.model.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.*;
-import java.math.BigDecimal;
 
+/**
+ * Entidad: ClubTeam
+ * Representa la relación explícita entre un club deportivo (Club) y uno de sus equipos (Team).
+ * Permite mantener la estructura jerárquica entre clubes y sus equipos asociados.
+ */
 @Entity
 @Table(name = "club_team")
 @Getter
@@ -17,8 +20,6 @@ public class ClubTeam {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    // Otros campos específicos de la entidad
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "club_id")

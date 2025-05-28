@@ -2,9 +2,11 @@ package com.matchzone.common.model.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.*;
-import java.math.BigDecimal;
 
+/**
+ * Entidad: DeviceStat
+ * Representa un dato biométrico o métrico capturado desde un dispositivo conectado.
+ */
 @Entity
 @Table(name = "device_stat")
 @Getter
@@ -17,8 +19,6 @@ public class DeviceStat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    // Otros campos específicos de la entidad
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userDevice_id")

@@ -2,9 +2,11 @@ package com.matchzone.common.model.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.*;
-import java.math.BigDecimal;
 
+/**
+ * Entidad: School
+ * Representa una escuela formativa o academia de fútbol.
+ */
 @Entity
 @Table(name = "school")
 @Getter
@@ -18,5 +20,4 @@ public class School {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Otros campos específicos de la entidad
 }

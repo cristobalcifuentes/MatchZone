@@ -2,9 +2,11 @@ package com.matchzone.common.model.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.*;
-import java.math.BigDecimal;
 
+/**
+ * Entidad: MedicalRecord
+ * Representa una ficha médica opcional asociada a un jugador.
+ */
 @Entity
 @Table(name = "medical_record")
 @Getter
@@ -17,8 +19,6 @@ public class MedicalRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    // Otros campos específicos de la entidad
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

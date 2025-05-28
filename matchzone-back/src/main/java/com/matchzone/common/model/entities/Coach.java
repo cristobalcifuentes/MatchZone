@@ -2,9 +2,12 @@ package com.matchzone.common.model.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.*;
-import java.math.BigDecimal;
 
+
+/**
+ * Entidad: Coach
+ * Representa un entrenador personal registrado en la plataforma.
+ */
 @Entity
 @Table(name = "coach")
 @Getter
@@ -18,5 +21,4 @@ public class Coach {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Otros campos específicos de la entidad
 }

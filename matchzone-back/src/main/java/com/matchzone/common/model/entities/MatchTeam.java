@@ -2,9 +2,11 @@ package com.matchzone.common.model.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.*;
-import java.math.BigDecimal;
 
+/**
+ * Entidad: MatchTeam
+ * Representa la participación de un equipo dentro de un partido.
+ */
 @Entity
 @Table(name = "match_team")
 @Getter
@@ -18,13 +20,11 @@ public class MatchTeam {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Otros campos específicos de la entidad
-
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "match_id")
+    @JoinColumn(name = "match_id", nullable = false)
     private Match match;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "team_id")
+    @JoinColumn(name = "team_id", nullable = false)
     private Team team;
 }

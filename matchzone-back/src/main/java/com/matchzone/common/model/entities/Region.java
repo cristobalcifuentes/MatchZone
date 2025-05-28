@@ -2,9 +2,11 @@ package com.matchzone.common.model.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.*;
-import java.math.BigDecimal;
 
+/**
+ * Entidad: Region
+ * Representa una región geográfica del país.
+ */
 @Entity
 @Table(name = "region")
 @Getter
@@ -17,6 +19,7 @@ public class Region {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+    private String name;
 
-    // Otros campos específicos de la entidad
 }

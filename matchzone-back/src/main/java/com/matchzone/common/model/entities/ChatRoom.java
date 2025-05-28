@@ -2,9 +2,11 @@ package com.matchzone.common.model.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.*;
-import java.math.BigDecimal;
 
+/**
+ * Entidad: ChatRoom
+ * Representa una sala de chat donde pueden participar múltiples usuarios o equipos.
+ */
 @Entity
 @Table(name = "chat_room")
 @Getter

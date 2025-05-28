@@ -2,9 +2,11 @@ package com.matchzone.common.model.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.*;
-import java.math.BigDecimal;
 
+/**
+ * Entidad: EventParticipant
+ * Representa la participación de un equipo o jugador en un evento.
+ */
 @Entity
 @Table(name = "event_participant")
 @Getter
@@ -17,8 +19,6 @@ public class EventParticipant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    // Otros campos específicos de la entidad
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id")

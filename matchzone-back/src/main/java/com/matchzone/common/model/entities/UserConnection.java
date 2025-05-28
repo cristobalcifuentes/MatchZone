@@ -3,6 +3,10 @@ package com.matchzone.common.model.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+/**
+ * Entidad: UserConnection
+ * Representa la conexión de un usuario con una red social externa (Google, Facebook, etc.).
+ */
 @Entity
 @Table(name = "user_connection")
 @Getter
@@ -15,8 +19,6 @@ public class UserConnection {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    // Otros campos específicos de la entidad
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

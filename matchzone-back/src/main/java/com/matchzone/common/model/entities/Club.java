@@ -2,9 +2,12 @@ package com.matchzone.common.model.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.*;
-import java.math.BigDecimal;
 
+/**
+ * Entidad: Club
+ * Representa una organización deportiva formal, como una institución o agrupación, que puede tener múltiples equipos.
+ * Sirve para agrupar y administrar varios equipos bajo una misma entidad organizativa.
+ */
 @Entity
 @Table(name = "club")
 @Getter
@@ -18,5 +21,4 @@ public class Club {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Otros campos específicos de la entidad
 }

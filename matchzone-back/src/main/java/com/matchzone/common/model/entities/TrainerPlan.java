@@ -2,9 +2,11 @@ package com.matchzone.common.model.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.*;
-import java.math.BigDecimal;
 
+/**
+ * Entidad: TrainerPlan
+ * Representa un plan de entrenamiento asignado a un jugador o equipo.
+ */
 @Entity
 @Table(name = "trainer_plan")
 @Getter
@@ -17,8 +19,6 @@ public class TrainerPlan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    // Otros campos específicos de la entidad
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

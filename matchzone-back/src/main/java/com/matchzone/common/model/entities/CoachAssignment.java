@@ -2,9 +2,12 @@ package com.matchzone.common.model.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.*;
-import java.math.BigDecimal;
 
+/**
+ * Entidad: CoachAssignment
+ * Representa la asignación de un entrenador (Coach) a un usuario o a un equipo.
+ * Permite modelar relaciones dinámicas entre entrenadores y sus dirigidos, ya sean individuales o grupales.
+ */
 @Entity
 @Table(name = "coach_assignment")
 @Getter
@@ -17,8 +20,6 @@ public class CoachAssignment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    // Otros campos específicos de la entidad
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "coach_id")

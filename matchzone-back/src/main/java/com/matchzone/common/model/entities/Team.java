@@ -1,10 +1,14 @@
 package com.matchzone.common.model.entities;
 
+import java.util.Set;
+
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.*;
-import java.math.BigDecimal;
 
+/**
+ * Entidad: Team
+ * Representa un equipo que participa en partidos dentro de la plataforma.
+ */
 @Entity
 @Table(name = "team")
 @Getter
@@ -18,8 +22,6 @@ public class Team {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Otros campos específicos de la entidad
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sport_id")
     private Sport sport;
@@ -31,4 +33,10 @@ public class Team {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "club_id")
     private Club club;
+    
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<MatchTeam> matchTeams;
+
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<MatchParticipation> participations;
 }

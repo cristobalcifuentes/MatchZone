@@ -2,9 +2,11 @@ package com.matchzone.common.model.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.*;
-import java.math.BigDecimal;
 
+/**
+ * Entidad: MatchRating
+ * Representa la calificación o puntuación dada a un partido por parte de un jugador.
+ */
 @Entity
 @Table(name = "match_rating")
 @Getter
@@ -17,8 +19,6 @@ public class MatchRating {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    // Otros campos específicos de la entidad
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "match_id")

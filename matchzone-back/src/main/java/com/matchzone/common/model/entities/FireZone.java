@@ -2,23 +2,23 @@ package com.matchzone.common.model.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.*;
-import java.math.BigDecimal;
 
+/**
+ * Entidad: FireZone
+ * Representa una solicitud activa de un equipo buscando rival para jugar.
+ */
 @Entity
-@Table(name = "hot_zone")
+@Table(name = "fire_zone")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class HotZone {
+public class FireZone {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    // Otros campos específicos de la entidad
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id")

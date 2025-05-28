@@ -2,9 +2,11 @@ package com.matchzone.common.model.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.*;
-import java.math.BigDecimal;
 
+/**
+ * Entidad: Pricing
+ * Representa la tarifa configurada para una cancha (por hora).
+ */
 @Entity
 @Table(name = "pricing")
 @Getter
@@ -17,8 +19,6 @@ public class Pricing {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    // Otros campos específicos de la entidad
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "court_id")

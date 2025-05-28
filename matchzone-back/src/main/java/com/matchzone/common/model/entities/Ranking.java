@@ -1,10 +1,14 @@
 package com.matchzone.common.model.entities;
 
+import com.matchzone.common.model.enums.RankingTargetType;
+
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.*;
-import java.math.BigDecimal;
 
+/**
+ * Entidad: Ranking
+ * Representa el ranking general o específico por deporte para usuarios y equipos.
+ */
 @Entity
 @Table(name = "ranking")
 @Getter
@@ -14,21 +18,30 @@ import java.math.BigDecimal;
 @Builder
 public class Ranking {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    // Otros campos específicos de la entidad
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "sport_id")
+	private Sport sport;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sport_id")
-    private Sport sport;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id")
+	private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "team_id")
+	private Team team;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "team_id")
-    private Team team;
+	private RankingTargetType targetType;
+	
+	// ID de User o Team, según targetType
+	private Long targetId;
+	
+	// Escala interna por dificultad
+	private int difficultyLevel;
+	
+	private int points;
+	private boolean active;
 }

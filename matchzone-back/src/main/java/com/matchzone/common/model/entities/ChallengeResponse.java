@@ -2,9 +2,11 @@ package com.matchzone.common.model.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.*;
-import java.math.BigDecimal;
 
+/**
+ * Entidad: ChallengeResponse
+ * Representa la respuesta (aceptación o rechazo) a un reto.
+ */
 @Entity
 @Table(name = "challenge_response")
 @Getter
@@ -17,8 +19,6 @@ public class ChallengeResponse {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    // Otros campos específicos de la entidad
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "challenge_id")

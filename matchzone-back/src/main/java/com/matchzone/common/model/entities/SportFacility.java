@@ -2,9 +2,12 @@ package com.matchzone.common.model.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.*;
-import java.math.BigDecimal;
+import java.util.Set;
 
+/**
+ * Entidad: SportFacility
+ * Representa un complejo deportivo que puede contener múltiples canchas.
+ */
 @Entity
 @Table(name = "sport_facility")
 @Getter
@@ -18,9 +21,6 @@ public class SportFacility {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Otros campos específicos de la entidad
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "city_id")
-    private City city;
+    @OneToMany(mappedBy = "sportFacility", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<SportFacilityAdmin> administradores;
 }

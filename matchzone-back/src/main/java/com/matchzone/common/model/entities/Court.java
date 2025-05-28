@@ -2,9 +2,11 @@ package com.matchzone.common.model.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.*;
-import java.math.BigDecimal;
 
+/**
+ * Entidad: Court
+ * Representa una cancha específica dentro de un complejo deportivo.
+ */
 @Entity
 @Table(name = "court")
 @Getter
@@ -17,8 +19,6 @@ public class Court {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    // Otros campos específicos de la entidad
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sportFacility_id")

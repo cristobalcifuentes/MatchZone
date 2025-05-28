@@ -2,9 +2,11 @@ package com.matchzone.common.model.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.*;
-import java.math.BigDecimal;
 
+/**
+ * Entidad: Gender
+ * Representa el género (masculino, femenino, mixto, otro) de usuarios y equipos.
+ */
 @Entity
 @Table(name = "gender")
 @Getter
@@ -18,5 +20,5 @@ public class Gender {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Otros campos específicos de la entidad
+    private String name; 
 }

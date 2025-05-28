@@ -2,9 +2,11 @@ package com.matchzone.common.model.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.*;
-import java.math.BigDecimal;
 
+/**
+ * Entidad: TeamMember
+ * Representa la relación entre un usuario y un equipo, incluyendo su rol dentro del mismo.
+ */
 @Entity
 @Table(name = "team_member")
 @Getter
@@ -17,8 +19,6 @@ public class TeamMember {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    // Otros campos específicos de la entidad
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
