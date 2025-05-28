@@ -1,7 +1,5 @@
 server:
   port: 8080
-  servlet:
-    context-path: /api
 
 spring:
   datasource:
@@ -22,9 +20,29 @@ spring:
   sql:
     init:
       mode: always # Para que ejecute data.sql o schema.sql si existen
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: matchzoneapp@gmail.com
+    password: gafvvovbtfbqcikq
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+jwt:
+  secret: tu_clave_secreta_super_segura_y_larga_para_jwt
+  expiration: 86400000 # 1 día en milisegundos
+  email-verification-expiration: 900000 # 15 minutos
 
 # Nivel de logs
 logging:
   level:
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    
+app:
+  email:
+    from: matchzone@gmail.com
+    verification-url: http://localhost:8080/auth/verify
