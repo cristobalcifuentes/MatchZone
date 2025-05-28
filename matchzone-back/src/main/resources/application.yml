@@ -1,0 +1,30 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+spring:
+  datasource:
+    url: jdbc:postgresql://matchzone-db.c7suiaskuhog.us-east-2.rds.amazonaws.com:5432/postgres
+    username: matchzone
+    password: matchzone123456
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update  # O "create" si quieres que borre y cree todo desde cero cada vez
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  sql:
+    init:
+      mode: always # Para que ejecute data.sql o schema.sql si existen
+
+# Nivel de logs
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
