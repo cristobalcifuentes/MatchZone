@@ -20,17 +20,17 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 50)
-    private String username; // No único, nombre visible
+    @Column(nullable = false)
+    private String usernameVisible;
 
-    @Column(nullable = false, unique = true, length = 100)
-    private String email; // Login principal
+    @Column(nullable = false, unique = true)
+    private String usernameInternal; 
 
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
 
-    @Column(name = "fecha_nacimiento")
-    private LocalDate fechaNacimiento;
+    @Column(name = "birth_date")
+    private LocalDate birthDate;
     
     @Column(name = "email_verified", nullable = false)
     private boolean emailVerified;
@@ -41,11 +41,28 @@ public class User {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
     
+    @Column(nullable = false, unique = true)
+    private String email;
+    
+    @ManyToOne
+    @JoinColumn(name = "city_id")
+    private City city;
+    
+    @Column(name = "profile_image_url")
+    private String profileImageUrl;
+    
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<SportFacilityAdmin> administraciones;
     
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<MatchParticipation> participations;
+    
+    @ManyToOne
+    @JoinColumn(name = "gender_id")
+    private Gender gender;
+    
+    @Column(nullable = false)
+    private boolean active;
 
     @PrePersist
     protected void onCreate() {

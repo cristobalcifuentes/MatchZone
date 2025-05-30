@@ -23,8 +23,6 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final AuthService authService;
-    private final JWTUtil jwtUtil;
-    private final UserRepository userRepository;
 
     @GetMapping("/verify")
     public ResponseEntity<String> verifyEmail(@RequestParam("token") String token) {
@@ -75,12 +73,9 @@ public class AuthController {
     }
     
     @GetMapping("/me")
-    public ResponseEntity<AuthResponse> getCurrentUser(Authentication authentication) {
-        String email = authentication.getName();
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-        String token = jwtUtil.generateToken(user); // opcional
-
-        return ResponseEntity.ok(new AuthResponse(token, user.getUsername(), user.getEmail()));
+    public ResponseEntity<AuthResponse> getCurrentUser(Authentication auth) {
+        String email = auth.getName();
+        AuthResponse response = authService.getCurrentUser(email);
+        return ResponseEntity.ok(response);
     }
 }

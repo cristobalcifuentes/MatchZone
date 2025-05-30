@@ -1,18 +1,17 @@
 package com.matchzone.auth.service;
 
-
+import com.matchzone.auth.dto.AuthResponse;
 import com.matchzone.auth.dto.LoginRequest;
 import com.matchzone.auth.dto.RegisterRequest;
-import com.matchzone.auth.dto.AuthResponse;
-import com.matchzone.auth.mapper.UserMapper;
-import com.matchzone.auth.util.JWTUtil;
+import com.matchzone.common.exception.ResourceNotFoundException;
+import com.matchzone.common.model.entities.City;
+import com.matchzone.common.model.entities.Gender;
 import com.matchzone.common.model.entities.User;
+import com.matchzone.common.model.repository.CityRepository;
+import com.matchzone.common.model.repository.GenderRepository;
 import com.matchzone.common.model.repository.UserRepository;
-
+import com.matchzone.auth.util.JWTUtil;
 import lombok.RequiredArgsConstructor;
-
-import java.util.Optional;
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,30 +20,58 @@ import org.springframework.stereotype.Service;
 public class AuthService {
 
     private final UserRepository userRepository;
+    private final GenderRepository genderRepository;
+    private final CityRepository cityRepository;
     private final PasswordEncoder passwordEncoder;
     private final JWTUtil jwtUtil;
     private final EmailService emailService;
 
     public AuthResponse register(RegisterRequest request) {
-        if (userRepository.existsByEmail(request.getEmail())) {
-            throw new IllegalArgumentException("El email ya está registrado");
+    	
+    	if (!request.getPassword().equals(request.getConfirmPassword())) {
+            throw new IllegalArgumentException("Passwords do not match");
         }
 
-        String hashed = passwordEncoder.encode(request.getPassword());
-        User user = UserMapper.toEntity(request, hashed);
-        user.setEmailVerified(false);
-        User saved = userRepository.save(user);
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new IllegalArgumentException("El correo ya está registrado");
+        }
 
-        String verificationToken = jwtUtil.generateEmailVerificationToken(saved);
-        emailService.sendVerificationEmail(saved.getEmail(), verificationToken);
+        // 1. Generar usernameVisible e interno
+        String usernameVisible  = request.getUsernameVisible();
+        String usernameInternal = generateUsernameInternal(usernameVisible);
 
-        String token = jwtUtil.generateToken(saved);
-        return new AuthResponse(token, saved.getUsername(), saved.getEmail());
+        // 2. Resolver Gender y City por ID
+        Gender gender = genderRepository.findById(request.getGenderId())
+            .orElseThrow(() -> new ResourceNotFoundException("Género no encontrado"));
+        City city = cityRepository.findById(request.getCityId())
+            .orElseThrow(() -> new ResourceNotFoundException("Ciudad no encontrada"));
+
+        // 3. Construir y guardar entidad User
+        User user = User.builder()
+            .usernameVisible(usernameVisible)
+            .usernameInternal(usernameInternal)
+            .email(request.getEmail())
+            .passwordHash(passwordEncoder.encode(request.getPassword()))
+            .birthDate(request.getBirthDate())
+            .gender(gender)
+            .city(city)
+            .emailVerified(false)
+            .active(true)
+            .build();
+
+        user = userRepository.save(user);
+
+        // 4. Enviar email de verificación y generar token de sesión
+        String verificationToken = jwtUtil.generateEmailVerificationToken(user);
+        emailService.sendVerificationEmail(user.getEmail(), verificationToken);
+
+        String sessionToken = jwtUtil.generateToken(user);
+        return new AuthResponse(sessionToken, user.getUsernameVisible(), user.getEmail());
     }
 
     public AuthResponse login(LoginRequest request) {
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("Credenciales inválidas"));
+            .orElseThrow(() -> new IllegalArgumentException("Credenciales inválidas"));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
             throw new IllegalArgumentException("Credenciales inválidas");
@@ -54,31 +81,26 @@ public class AuthService {
             throw new IllegalStateException("Debes verificar tu email antes de iniciar sesión");
         }
 
-        String token = jwtUtil.generateToken(user);
-        return new AuthResponse(token, user.getUsername(), user.getEmail());
+        String sessionToken = jwtUtil.generateToken(user);
+        return new AuthResponse(sessionToken, user.getUsernameVisible(), user.getEmail());
     }
 
     public void verifyEmail(String token) {
         String email = jwtUtil.extractEmailFromVerificationToken(token);
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("Token inválido"));
+            .orElseThrow(() -> new IllegalArgumentException("Token inválido"));
 
         user.setEmailVerified(true);
         userRepository.save(user);
     }
-    
+
     public void sendPasswordResetToken(String email) {
-        Optional<User> optionalUser = userRepository.findByEmail(email);
-        if (optionalUser.isEmpty()) {
-            return; // no revelar si el email existe o no
-        }
-
-        User user = optionalUser.get();
-
-        String token = jwtUtil.generatePasswordResetToken(user);
-        emailService.sendPasswordResetEmail(user.getEmail(), token);
+        userRepository.findByEmail(email).ifPresent(user -> {
+            String resetToken = jwtUtil.generatePasswordResetToken(user);
+            emailService.sendPasswordResetEmail(user.getEmail(), resetToken);
+        });
     }
-    
+
     public void resetPassword(String token, String newPassword) {
         String email = jwtUtil.extractClaim(token, claims -> {
             if (!"password_reset".equals(claims.get("purpose"))) {
@@ -90,10 +112,29 @@ public class AuthService {
         User user = userRepository.findByEmail(email)
             .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
 
-        String hashedPassword = passwordEncoder.encode(newPassword);
-        user.setPasswordHash(hashedPassword);
+        user.setPasswordHash(passwordEncoder.encode(newPassword));
         userRepository.save(user);
     }
+
+    private String generateUsernameInternal(String visible) {
+        int count = userRepository.countByUsernameVisible(visible);
+        int suffix = count + 1;
+        String candidate;
+        do {
+            candidate = String.format("%s#%03d", visible, suffix++);
+        } while (userRepository.existsByUsernameInternal(candidate));
+        return candidate;
+    }
     
-    
+    public AuthResponse getCurrentUser(String email) {
+        User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        String token = jwtUtil.generateToken(user);
+        return new AuthResponse(
+            token,
+            user.getUsernameVisible(),
+            user.getEmail()
+        );
+    }
 }
